@@ -19,7 +19,7 @@ public class parser extends lexer  {
 		}
 		catch(Exception e)
 		{
-			System.out.println("Fuuuck Offfff!!!");
+			System.out.println("Error!!!");
 		}
 		getToken();
 		parsing();
@@ -126,7 +126,7 @@ public class parser extends lexer  {
 		}
 		catch(Exception e)
 		{
-			System.out.println("Fuck Off");
+			System.out.println("Error!");
 		}
 	}
 }
