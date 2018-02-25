@@ -105,15 +105,5 @@ public class lexer  {
 					
 	}
 	
-	/*public static void main(String args[]) 
-	{
-		
-		try{
-		lexer ob=new lexer("C:/Users/Vishal/workspace/Interpreter/code.txt");
-		}
-		catch(Exception e)
-		{
-			System.out.println("FUUUCK OFF!!!");
-		}
-	}*/
+	
 }
