@@ -37,7 +37,88 @@ public class parser extends lexer  {
 		
 	}
 	
-
+	public void Exp()
+	{
+		//CONST
+	}
+	public void block()
+	{
+		Exp();
+	}
+	
+	public void else_tail()
+	{
+		getToken();
+		
+			if(token.equals("else")
+			   {
+				getToken();
+				
+					if(token.equals("{")
+			   		{
+						block();
+						getToken();
+					
+							if(token.equals("}")
+							   {
+								 else_tail();  
+							   }
+							   else
+							   {
+								System.out.println("Error in syntax");	   
+							   }
+						
+					}
+					else
+					{
+						getToken();
+							if(token.equals("if")
+							   {
+								   Startif();
+							   }
+							 else
+							   {
+								   System.out.println("Error in syntax");
+							   }
+						
+						
+					}
+							   
+							  
+				
+			   }
+			   else
+			   {
+				   return;
+			   }
+			   
+		
+	}
+	public void Startif()
+	{
+		getToken();
+		
+			if(token.equals("{")
+			   {
+				block();
+				getToken();
+				
+					if(token.equals("}")
+					   {
+						 else_tail();  
+					   }
+					   else
+					   {
+						System.out.println("Error in syntax");	   
+					   }
+				
+			   }	   
+			else
+			{
+				System.out.println("Error in syntax");	
+			}
+		
+	}
 	
 	public void parsing() throws Exception
 	{
@@ -53,9 +134,13 @@ public class parser extends lexer  {
 				
 				var_dec();
 			}
-			else if(token.contains("let") && !token.equals("let"))
+			else if(token.equals("if"))
 			{
-				System.out.println("Error in syntax");
+				Startif();
+			}
+			else
+			{
+				System.out.println("Error in syntax");	
 			}
 		}
 	}
