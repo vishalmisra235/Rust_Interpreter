@@ -20,30 +20,43 @@ public class lexer  {
 	
 	public lexer(String code)throws Exception
 	{
-		
+			//Inputs file
 			FileReader fr=new FileReader(code);
 			BufferedReader br=new BufferedReader(fr);
+			
+			//Temporary string to read line by line
 			String s;
 			while((s=br.readLine())!=null)
 			{
+				//Removes whitespaces
 				s=s.trim();
+				
+				//Accepts singleton braces
 				if(s.length()==1)
 				{
 					words.add(s);
 					continue;
 				}
+				
+				
 				for(int i=0;i<s.length()-1;i++)
 				{
+					//Skips over whitespaces
 					if(s.charAt(i)==' ')
 					{
 						continue;
 					}
+					
+					// between A->Z or a->z : Start of a lexime
 					else if(((int)s.charAt(i)>=65 && (int)s.charAt(i)<=90)||(int)s.charAt(i)>=97 && (int)s.charAt(i)<=122)
 					{
+						//Temporary String to store a single lexime
 						String s1="";
 						
+						//between A->Z or a->z or 0-9 : Middle of lexime 
 						while(((int)s.charAt(i+1)>=65 && (int)s.charAt(i+1)<=90)||((int)s.charAt(i+1)>=97 && (int)s.charAt(i+1)<=122)||((int)s.charAt(i+1)>=48 && (int)s.charAt(i+1)<=57))
 						{
+							//Error handling for array index out of bound excpetion
 							if(i<s.length()-2)
 							{
 							s1=s1+s.charAt(i);
@@ -55,9 +68,13 @@ public class lexer  {
 								break;
 							}
 						}
+						
+						//Storing datatypes, identifiers and keywords in lexime list
 						s1=s1+s.charAt(i);
 						words.add(s1);
 					}
+					
+					//Checking digit in temp line string and storing it as number
 					else if(((int)s.charAt(i)>=48 && (int)s.charAt(i)<=57))
 					{
 						String s1="";
@@ -69,6 +86,8 @@ public class lexer  {
 						s1=s1+s.charAt(i);
 						words.add(s1);
 					}
+					
+					//Checking for string inputs and storing as " <STRING> " in lexime list
 					else if(s.charAt(i)=='\"')
 					{
 						String s1="\"";i++;
@@ -81,6 +100,7 @@ public class lexer  {
 						words.add(s1);
 					}
 					
+					//Handling any other charachters/operators
 					else
 					{
 						String s1="";
@@ -96,8 +116,12 @@ public class lexer  {
 					}
 			}
 			}
+			//Closing buffer reader and file reader object
+			//Garbage collection
 			br.close();
 			fr.close();
+			
+			//Printing tokens
 			for(String z:words)
 			{
 				System.out.println(z);
