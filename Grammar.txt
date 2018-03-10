@@ -1,16 +1,25 @@
 Const   := ???
 Var     := ???
 Op      := + | - | / | *
+Datatype:= i64|i32|usize|u32|u64
 @ is epsilon
 
+//CURRENT TEMPORARY STATES
+Exp     :=      Const
+block   :=      Exp
+
+//DEFINITIONS
 Start
-        Start           -> Var_dec
+        Start   :=      Var_dec 
+                                        | Startif (for testing?)
         
 Variable declaration
-        Var_dec         -> "let" MUT Var ":" DataType Init
-        MUT            -> mut | @
-        Var ???
-        Datatype        -> i64|i32|usize|u32|u64
-        Init            -> "=" Exp
-        Exp             -> Const
+        Var_dec :=      "let" MUT Var ":" DataType Init ";"
+        MUT     :=      mut | @
+        Init    :=      "=" Exp
+        
+       
+If else
+        Startif         := "if" Exp "{" block "}" else_tail ";"
+        else_tail       := "else" Startif | "else" "{" block "}" | @
         
