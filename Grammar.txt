@@ -1,0 +1,14 @@
+Const   := ???
+Var     := ???
+Op      := + | - | / | *
+
+Variable declaration
+        Var_dec       -> "let"  Var ":" DataType Init
+  
+        Var ???
+        Datatype      -> i64|i32|usize|u32|u64
+        Init          -> "=" Exp
+        Exp           -> Exp Op Exp | Var | Const
+        
+
+  
