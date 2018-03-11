@@ -5,10 +5,10 @@ import java.util.HashMap;
 
 import com.first.lexer;
 public class parser extends lexer  {
-	int count=0;
+	int count=0;int c=0;
 	String token;
-	HashMap<String,Character> terminals=new HashMap<String,Character>();//for storing non terminals as characters
-	HashMap<String,Integer> value=new HashMap<String,Integer>();//for storing variables and values
+	HashMap<String,String> terminals=new HashMap<String,String>();//for storing non terminals as characters
+	
 	ArrayList<String> var=new ArrayList<String>();//for storing all variables defined
 	ArrayList<String> immutable=new ArrayList<String>();//for storing immutable variables
 	ArrayList<String> mutables=new ArrayList<String>();//for storing mutable variables
@@ -18,10 +18,10 @@ public class parser extends lexer  {
 		
 		getToken();
 		parsing();
-		terminals.put("let", 'L');
-		terminals.put("mut", 'M');
-		terminals.put("i64", 'D');
-		terminals.put("usize", 'U');
+		terminals.put("let", "L");
+		terminals.put("mut", "M");
+		terminals.put("i64", "D");
+		terminals.put("usize", "U");
 		
 	}
 	
@@ -32,16 +32,20 @@ public class parser extends lexer  {
 		count++;
 		token=s;
 		if(count==words.size())
-		{
-			System.out.println("File input finished");
+		{	
+			System.out.println("Parsed Successfully!!!");
 			System.exit(0);
 		}
 	}
-	//checks wether given string is a terminal or nonterminal
+	//checks whether given string is a terminal or nonterminal
 	boolean isNonTerminal(String s)
 	{
 		System.out.println(s);
-		char c=terminals.get(s);
+		if(terminals.get(s)==null)
+		{
+			return false;
+		}
+		char c=terminals.get(s).charAt(0);
 		int a=(int)c;
 		if(a>=65 && a<=90)
 		{
@@ -50,28 +54,31 @@ public class parser extends lexer  {
 		return false;
 	}
 	//checks mutability
-	boolean M()
+	boolean M() throws Exception
 	{
 		if(token.equals("mut"))
 		{
+			getToken();
 			return true;
 		}
+		getToken();
 		return false;
 	}
-	//checks datatype
+	//checks data types
 	public void D(String v) throws Exception
 	{
 		if(token.equals("i64"))
 		{
 			getToken();
-			if(token.equals(":"))
+			if(token.equals("="))
 			{
 			getToken();
-			value.put(v,Integer.parseInt(token) );
+			
 			}
 			else
 			{
-				System.out.println("Parse error");
+				System.out.println("Parse error1");
+				System.exit(0);
 			}
 		}
 		else
@@ -80,16 +87,14 @@ public class parser extends lexer  {
 			System.exit(0);
 		}
 	}
-	//fn for variable declaration
+	//function for variable declaration
 	public void V() throws Exception
 	{
 		getToken();String v="";
 		
 		boolean mutable=M();
 		
-		getToken();
-		
-			for(String x:var)
+		for(String x:var)
 			{
 				if(x.equals(token))
 				{
@@ -113,39 +118,94 @@ public class parser extends lexer  {
 			{
 				return;
 			}
-		
-		
-		getToken();
-		if(isNonTerminal(token))
-		{
+			getToken();
 			D(v);
+	}
+	
+	public void S()throws Exception
+	{
+		
+		if(E())
+		{
+			if(token.equals("{"))
+			{
+				c++;
+			}
+			if(token.equals("if"))
+			{
+				S();
+			}
+			
+			else if(token.equals("else"))
+			{
+				R();
+			}
+			
+			else if(token.equals("}"))
+			{
+				c--;
+			}
+			if(c<0)
+			{
+				System.out.println("ERROR!!");
+				System.exit(0);
+			}
+			getToken();
+			S();
 		}
 		else
 		{
-			System.out.println("Parse error");
-			System.exit(0);
+			getToken();
+			R();
 		}
-		
 	}
 	
-
+	public boolean E() throws Exception
+	{
+		getToken();
+		return true;
+	}
+	
+	public void R() throws Exception
+	{
+		getToken();
+		if(token.equals("else"))
+		{
+			S();
+		}
+		else
+		{
+			return;
+		}
+	}
 	
 	public void parsing() throws Exception
 	{
 		
 		while(count<words.size())
 		{
-			
+			getToken();
 			if( token.equals("let") )
 			{
 				V();
 			}
-			/*else if( !token.equals("let"))
+			/*if(token.equals("if"))
 			{
-				System.out.println("Error in syntax");
-				System.exit(0);
+				/*
+				 * S':R
+				 * Grammar:
+				 * S-> iEtSS' | a
+				 * S'-> eS | epsilon
+				 * E-> b
+				 
+				S();
+				if(c!=0)
+				{
+					System.out.println("Error");
+				}
 			}*/
 		}
+		
 	}
 	
 	public static void main(String args[]) throws Exception
