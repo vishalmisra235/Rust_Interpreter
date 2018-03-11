@@ -306,7 +306,7 @@ public class parser extends lexer  {
 	
 	public static void main(String args[]) throws Exception
 	{
-			vtester ob1=new vtester();
+			parser ob1=new parser();
 			
 	}
 }
