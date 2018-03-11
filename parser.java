@@ -2,7 +2,7 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.io.	*;
+import java.io.*;
 public class parser extends lexer  {
 	int count=0;int c=0;
 	String token;
