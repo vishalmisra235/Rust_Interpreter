@@ -1,9 +1,10 @@
 
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.io.*;
-public class parser extends lexer  {
+public class parser extends texer  {
 	int count=0;int c=0;
 	String token;
 	HashMap<String,String> terminals=new HashMap<String,String>();//for storing non terminals as characters
@@ -80,7 +81,6 @@ public class parser extends lexer  {
 			}
 
 		getToken();
-
 		return;
 	}
 
@@ -218,7 +218,7 @@ public class parser extends lexer  {
 		System.out.println(token);
 		System.out.println(" ");
 		
-		while(count<words.size())
+		while(count<words.size()&&token!=$)
 		{
 
 			stmt();
