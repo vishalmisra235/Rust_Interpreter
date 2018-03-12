@@ -1,10 +1,8 @@
-
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.io.*;
-public class parser extends texer  {
+public class parser extends lexer  {
 	int count=0;int c=0;
 	String token;
 	HashMap<String,String> terminals=new HashMap<String,String>();//for storing non terminals as characters
@@ -14,7 +12,7 @@ public class parser extends texer  {
 	ArrayList<String> mutables=new ArrayList<String>();//for storing mutable variables
 		public parser() throws Exception
 	{
-		super("C:/Users/PRIYANSH SANGULE/Rust_Interpreter-master/code.txt");
+		super("./code.txt"); //// CHANGE PATH
 		
 		getToken();
 		parsing();	
@@ -31,22 +29,6 @@ public class parser extends texer  {
 			System.out.println("Parsed Successfully!!!");
 			System.exit(0);
 		}
-	}
-	//checks whether given string is a terminal or nonterminal
-	boolean isNonTerminal(String s)
-	{
-		System.out.println(s);
-		if(terminals.get(s)==null)
-		{
-			return false;
-		}
-		char c=terminals.get(s).charAt(0);
-		int a=(int)c;
-		if(a>=65 && a<=90)
-		{
-			return true;
-		}
-		return false;
 	}
 	
 	//Variable name handling
