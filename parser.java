@@ -6,38 +6,44 @@ public class parser extends lexer  {
 	int count=0;int c=0;
 	String token;
 	HashMap<String,String> terminals=new HashMap<String,String>();//for storing non terminals as characters
-	
+
 	ArrayList<String> var=new ArrayList<String>();//for storing all variables defined
 	ArrayList<String> immutable=new ArrayList<String>();//for storing immutable variables
 	ArrayList<String> mutables=new ArrayList<String>();//for storing mutable variables
 		public parser() throws Exception
 	{
-		super("./code.txt"); //// CHANGE PATH
-		
+		super("/home/xan/Rust_Interpreter-master/code.txt"); //// CHANGE PATH
+
 		getToken();
-		parsing();	
+		parsing();
 	}
-	
-	//gets each token from list of words for parsing	
-	public void getToken()throws Exception			
+
+	//gets each token from list of words for parsing
+	public void getToken()throws Exception
 	{
 		String s=words.get(count);
 		count++;
 		token=s;
+
+
 		if(count==words.size())
-		{	
+		{
 			System.out.println("Parsed Successfully!!!");
 			System.exit(0);
 		}
+		if(token=="$")
+		{
+			getToken();
+		}
 	}
-	
+
 	//Variable name handling
 	public void Vari(boolean mutable) throws Exception
 	{
 		System.out.println("Vari...");
 		System.out.println(token);
 		System.out.println(" ");
-		
+
 		////////////////////////////////////////////////////////UPDATE with isDefined
 		for(String x :var)
 			{
@@ -48,7 +54,7 @@ public class parser extends lexer  {
 				}
 			}
 		////////////////////////////////////////////////////////////
-		
+
 		//If variable not defined earlier
 		//Add to mut/immut and var lists accordingly
 		if(mutable==true)
@@ -72,7 +78,7 @@ public class parser extends lexer  {
 		System.out.println("Muta...");
 		System.out.println(token);
 		System.out.println(" ");
-		
+
 		if(token.equals("mut"))
 		{
 			getToken();
@@ -85,8 +91,8 @@ public class parser extends lexer  {
 		}
 	}
 
-	
-	
+
+
 	//checks data types
 	//PASSING STRING TO DEFINE VARIABLE AND LINKING MEMORY LOCATION MAP
 	public void Datatype(String v) throws Exception
@@ -124,7 +130,7 @@ public class parser extends lexer  {
 		System.out.println("Init...");
 		System.out.println(token);
 		System.out.println(" ");
-		
+
 		if(token.equals("="))
 			{
 				getToken();
@@ -152,11 +158,11 @@ public class parser extends lexer  {
 
 		//temp string containg name of var
 		String var_name="";
-		
+
 		//Checking if mut (optional)
 		getToken();
 		boolean mutable=Muta();
-		
+
 		Vari(mutable);
 
 		var_name=token;
@@ -170,13 +176,11 @@ public class parser extends lexer  {
 			else if(token.equals(":"))//For cases like "let mut x: i32 = 5;"
 			{
 				getToken();
-				//currently: token == Datatype
 				Datatype(var_name);
-
-				//currently: token == Datatype
 				Init();
 				if(token.equals(";")) //For case "let mut n;"
 				{
+					System.out.println(token);
 					getToken();
 					return;
 				}
@@ -192,24 +196,24 @@ public class parser extends lexer  {
 				System.exit(0);
 			}
 	}
-	
-	
+
+
 	public void parsing() throws Exception
 	{
 		System.out.println("parsing...");
 		System.out.println(token);
 		System.out.println(" ");
-		
-		while(count<words.size()&&token!=$)
+
+		while(count<words.size()&&token!="@")
 		{
 
 			stmt();
 
 		}
 		return;
-		
+
 	}
-	
+
 	public boolean isDefined() throws Exception
 {
 	for(String x :var)
@@ -220,7 +224,7 @@ public class parser extends lexer  {
 					return true;
 				}
 			}
-	
+
 	getToken();
 	return false;
 }
@@ -230,12 +234,12 @@ public class parser extends lexer  {
 //Improvements to be done: Type checking for boolean_exp
 
 //(CURRENT: Simplified) Bool expression of type:=  variable logic_operator const
-public void bool_exp() throws Exception 
+public void bool_exp() throws Exception
 {
 	System.out.println("Bool_exp...");
 	System.out.println(token);
 	System.out.println(" ");
-	
+
 	if(!isDefined())
 	{
 		System.out.println("Variable"+ token +" not defined. ");
@@ -283,13 +287,13 @@ public void else_tail() throws Exception
 		return;
 	}
 }
-//Stmt := "if" bool_exp "{" Stmt "}" else_tail | Var_dec | 
+//Stmt := "if" bool_exp "{" Stmt "}" else_tail | Var_dec |
 public void stmt() throws Exception
 {
 	System.out.println("Stmt...");
 	System.out.println(token);
 	System.out.println(" ");
-		
+
 	if(token.equals("if"))
 	{
 		getToken();
@@ -340,15 +344,13 @@ public void stmt() throws Exception
 	}
 	else
 	{
-
-		System.out.println(token); 												//REMOVE THIS
 		while(!token.equals("let")||token.equals("if")||token.equals(";"))//Statement ends with ;
 		{
 			getToken();
 
 			System.out.print("\t");
 			System.out.print(token);
-			
+
 		}
 		if(token.equals(";"))
 			token.equals(";");
@@ -360,6 +362,7 @@ public void stmt() throws Exception
 	public static void main(String args[]) throws Exception
 	{
 			parser ob1=new parser();
-			
+
 	}
 }
+**********
