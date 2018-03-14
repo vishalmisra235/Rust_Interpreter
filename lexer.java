@@ -1,12 +1,10 @@
-package com.first;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.lang.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import com.first.tokentype;
+import java.io.*;
 public class lexer  {
 	String[] keywords={"let","as","break","const","continue","crate","else","enum","extern","false","fn","for","if","impl","loop",
 			"match","mod","move","mut","pub","ref","return","Self","self","static","struct","super","main","while","true","Vec","new",
@@ -27,7 +25,7 @@ public class lexer  {
 			//Temporary string to read line by line
 			String s;
 			while((s=br.readLine())!=null)
-			{
+			{	s=s+"$";
 				//Removes whitespaces
 				s=s.trim();
 				
@@ -118,6 +116,7 @@ public class lexer  {
 			}
 			//Closing buffer reader and file reader object
 			//Garbage collection
+			words.add("@");
 			br.close();
 			fr.close();
 			
