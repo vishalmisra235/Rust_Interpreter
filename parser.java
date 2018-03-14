@@ -21,20 +21,17 @@ public class parser extends lexer  {
 	//gets each token from list of words for parsing
 	public void getToken()throws Exception
 	{
-		String s=words.get(count);
-		count++;
-		token=s;
 
-
-		if(count==words.size())
-		{
-			System.out.println("Parsed Successfully!!!");
-			System.exit(0);
-		}
-		if(token=="$")
-		{
-			getToken();
-		}
+		do {
+			if(count==words.size())
+			{
+				System.out.println("Parsed Successfully!!!");
+				System.exit(0);
+			}
+			String s=words.get(count);
+			count++;
+			token=s;
+		} while (token.equals("$"));
 	}
 
 	//Variable name handling
@@ -206,9 +203,7 @@ public class parser extends lexer  {
 
 		while(count<words.size()&&token!="@")
 		{
-
 			stmt();
-
 		}
 		return;
 
@@ -246,12 +241,16 @@ public void bool_exp() throws Exception
 		System.exit(0);
 	}
 
+	System.out.println("Bool_exp logic op...");
+	System.out.println(token);
+	System.out.println(" ");
+
 	if(token.equals("==")||token.equals("!=")||token.equals("<")||token.equals(">")||token.equals("<=")||token.equals(">="))
 		{
 			getToken();
 			//Get the Constant;
 
-			System.out.println("Bool_exp...");
+			System.out.println("Bool_exp compare...");
 			System.out.println(token);
 			System.out.println(" ");
 		}
@@ -274,12 +273,40 @@ public void else_tail() throws Exception
 {
 	if(token.equals("else"))
 	{
-		System.out.println("Stmt...");
+		getToken();
+		System.out.println("else_tail...");
 		System.out.println(token);
 		System.out.println(" ");
 
-		stmt();
-		return;
+
+		if(token.equals("{"))
+		{
+			getToken();
+			System.out.println(token);
+			System.out.println(" ");
+
+			stmt();
+
+			if(token.equals("}"))
+			{
+				getToken();
+				System.out.println(token);
+				System.out.println(" ");
+				return;
+			}
+			else
+			{
+				System.out.println("Error! Expecting '}' at else-block");
+				System.exit(0);
+			}
+
+
+		}
+		else
+		{
+			System.out.println("Error! Expecting '{' at else-block");
+			System.exit(0);
+		}
 	}
 	else
 	{
@@ -342,20 +369,17 @@ public void stmt() throws Exception
 		Var_dec();
 		return;
 	}
+	else if(token.equals(";"))
+		{
+			System.out.println("; AAAA");
+			getToken();
+			return;}
 	else
 	{
-		while(!token.equals("let")||token.equals("if")||token.equals(";"))//Statement ends with ;
-		{
 			getToken();
-
-			System.out.print("\t");
 			System.out.print(token);
-
-		}
-		if(token.equals(";"))
-			token.equals(";");
-			getToken();
-		return; ////////////////////////SUPPOSE A STATEMENT
+			stmt();
+		 ////////////////////////SUPPOSE A STATEMENT
 	}
 }
 
@@ -365,4 +389,4 @@ public void stmt() throws Exception
 
 	}
 }
-**********
+
