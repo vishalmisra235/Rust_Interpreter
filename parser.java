@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.io.*;
 public class parser extends lexer  {
 	int count=0;int c=0;
-	String token;
+	String token="";
 	HashMap<String,String> terminals=new HashMap<String,String>();//for storing non terminals as characters
 
 	ArrayList<String> var=new ArrayList<String>();//for storing all variables defined
@@ -23,14 +23,15 @@ public class parser extends lexer  {
 	{
 
 		do {
+			String s=words.get(count);
+			count++;
+			token=s;
 			if(count==words.size())
 			{
 				System.out.println("Parsed Successfully!!!");
 				System.exit(0);
 			}
-			String s=words.get(count);
-			count++;
-			token=s;
+
 		} while (token.equals("$"));
 	}
 
@@ -42,11 +43,21 @@ public class parser extends lexer  {
 		System.out.println(" ");
 
 		////////////////////////////////////////////////////////UPDATE with isDefined
+		//Checks if the current token is in var (defined variable list)
 		for(String x :var)
 			{
 				if(x.equals(token))
 				{
 					System.out.println("Variable already defined");
+					System.exit(0);
+				}
+			}
+			//no variable name cn be a keyword
+			for(String x:keywords)
+			{
+				if(x.equals(token))
+				{
+					System.out.println("Variable definition error!!");
 					System.exit(0);
 				}
 			}
@@ -57,14 +68,14 @@ public class parser extends lexer  {
 		if(mutable==true)
 			{
 				mutables.add(token);
-				var.add(token);
+
 			}
 			else
 			{
 				immutable.add(token);
-				var.add(token);
-			}
 
+			}
+			var.add(token);
 		getToken();
 		return;
 	}
@@ -87,9 +98,6 @@ public class parser extends lexer  {
 			return false;
 		}
 	}
-
-
-
 	//checks data types
 	//PASSING STRING TO DEFINE VARIABLE AND LINKING MEMORY LOCATION MAP
 	public void Datatype(String v) throws Exception
@@ -204,6 +212,7 @@ public class parser extends lexer  {
 		while(count<words.size()&&token!="@")
 		{
 			stmt();
+
 		}
 		return;
 
@@ -211,10 +220,13 @@ public class parser extends lexer  {
 
 	public boolean isDefined() throws Exception
 {
+	System.out.println(" isDefined .."+token);
 	for(String x :var)
 			{
+				System.out.print("++");
 				if(x.equals(token))
 				{
+					System.out.println("TOKEN FOUND");
 					getToken();
 					return true;
 				}
@@ -237,7 +249,7 @@ public void bool_exp() throws Exception
 
 	if(!isDefined())
 	{
-		System.out.println("Variable"+ token +" not defined. ");
+		System.out.println("Variable '"+ token +"' not defined. ");
 		System.exit(0);
 	}
 
@@ -287,10 +299,13 @@ public void else_tail() throws Exception
 
 			stmt();
 
+			System.out.println(token);
+			System.out.println(" ");
 			if(token.equals("}"))
 			{
 				getToken();
 				System.out.println(token);
+
 				System.out.println(" ");
 				return;
 			}
@@ -323,11 +338,12 @@ public void stmt() throws Exception
 
 	if(token.equals("if"))
 	{
-		getToken();
+		//getToken();
 		System.out.println("if...");
 		System.out.println(token);
 		System.out.println(" ");
 
+		getToken();
 		bool_exp();
 
 		if(token.equals("{"))
@@ -371,9 +387,18 @@ public void stmt() throws Exception
 	}
 	else if(token.equals(";"))
 		{
-			System.out.println("; AAAA");
+			System.out.println(";");
 			getToken();
 			return;}
+
+	else if(token.equals("for"))
+		{
+			System.out.println("For...");
+			System.out.println(token);
+			System.out.println(" ");
+
+			in_for_loop();
+		}
 	else
 	{
 			getToken();
@@ -383,10 +408,24 @@ public void stmt() throws Exception
 	}
 }
 
+////////////////////////////////////////////////////
+public void in_for_loop() throws Exception
+{
+	System.out.println("In For...");
+	System.out.println(token);
+
+	getToken();
+	if(!isDefined())
+	{
+		System.out.println("Variable '"+ token +"' not defined");
+	}
+
+
+}
+/////////////////////////////////////////////////////
 	public static void main(String args[]) throws Exception
 	{
 			parser ob1=new parser();
 
 	}
 }
-
