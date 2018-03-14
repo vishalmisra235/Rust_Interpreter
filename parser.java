@@ -4,18 +4,23 @@ import java.util.HashMap;
 import java.io.*;
 public class parser extends lexer  {
 	int count=0;int c=0;
+
 	String token="";
 	HashMap<String,String> terminals=new HashMap<String,String>();//for storing non terminals as characters
-
 	ArrayList<String> var=new ArrayList<String>();//for storing all variables defined
 	ArrayList<String> immutable=new ArrayList<String>();//for storing immutable variables
 	ArrayList<String> mutables=new ArrayList<String>();//for storing mutable variables
 		public parser() throws Exception
 	{
-		super("/home/xan/Rust_Interpreter-master/code.txt"); //// CHANGE PATH
 
+		super("../code.txt"); //// CHANGE PATH
 		getToken();
 		parsing();
+		terminals.put("let", "L");
+		terminals.put("mut", "M");
+		terminals.put("i64", "D");
+		terminals.put("usize", "U");
+		
 	}
 
 	//gets each token from list of words for parsing
@@ -44,6 +49,7 @@ public class parser extends lexer  {
 
 		////////////////////////////////////////////////////////UPDATE with isDefined
 		//Checks if the current token is in var (defined variable list)
+
 		for(String x :var)
 			{
 				if(x.equals(token))
@@ -77,6 +83,21 @@ public class parser extends lexer  {
 			}
 			var.add(token);
 		getToken();
+		
+		//If variable not defined earlier
+		//Add to mut/immut and var lists accordingly
+		if(mutable==true)
+			{
+				mutables.add(token);
+				var.add(token);
+			}
+			else
+			{
+				immutable.add(token);
+				var.add(token);
+			}
+
+		getToken();
 		return;
 	}
 
@@ -86,7 +107,6 @@ public class parser extends lexer  {
 		System.out.println("Muta...");
 		System.out.println(token);
 		System.out.println(" ");
-
 		if(token.equals("mut"))
 		{
 			getToken();
@@ -98,6 +118,7 @@ public class parser extends lexer  {
 			return false;
 		}
 	}
+
 	//checks data types
 	//PASSING STRING TO DEFINE VARIABLE AND LINKING MEMORY LOCATION MAP
 	public void Datatype(String v) throws Exception
@@ -135,11 +156,11 @@ public class parser extends lexer  {
 		System.out.println("Init...");
 		System.out.println(token);
 		System.out.println(" ");
-
 		if(token.equals("="))
 			{
 				getToken();
 				Exp();
+
 				return;
 			}
 		else
@@ -163,11 +184,10 @@ public class parser extends lexer  {
 
 		//temp string containg name of var
 		String var_name="";
-
+    
 		//Checking if mut (optional)
 		getToken();
 		boolean mutable=Muta();
-
 		Vari(mutable);
 
 		var_name=token;
@@ -191,10 +211,12 @@ public class parser extends lexer  {
 				}
 				else
 				{
+
 					System.out.println("Variable declaration ';' error");
 					System.exit(0);
 				}
 			}
+
 			else
 			{
 				System.out.println("Variable declaration error.");
@@ -378,7 +400,9 @@ public void stmt() throws Exception
 			//Error Handling
 			System.out.println("Error! Expecting '{' after 'if' ");
 			System.exit(0);
+
 		}
+		
 	}
 	else if(token.equals("let"))
 	{
